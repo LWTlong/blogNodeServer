@@ -1,7 +1,7 @@
 
 
-# nodeServer/node_modules
-# nodeServer/.idea
+nodeServer/node_modules
+nodeServer/.idea
 
 node_modules
 .idea
