@@ -38,10 +38,21 @@ const serverHandle = async (req, res) => {
 
     // 解析 query
     req.query = querystring.parse(url.split('?')[1])
-
     // 解析 postData
     req.body = await getPostData(req)
-
+    // 解析 cookie
+    req.cookie = {}
+    const cookieStr = req.headers.cookie || ''
+    cookieStr.split(';').forEach(item => {
+        if (!item){
+            return
+        }
+        const arr = item.split('=')
+        const key = arr[0].trim()
+        const val = arr[1]
+        req.cookie[key] = val
+    })
+    console.log(req.cookie)
 
     // 处理 blog 路由
     const blogData = await handleBlogRouter(req, res)
