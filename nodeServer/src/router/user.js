@@ -1,17 +1,20 @@
 const {loginCheck} = require('../controller/user')
 const {SuccessModel, ErrorModel} = require('../model/resModel')
+const { setRedis} = require('../db/redis')
 
 const handleUserRouter = (req, res) => {
     const method = req.method
 
-    if(method === 'GET' && req.path === '/api/user/login'){
-        // const {username, password} = req.body
-        const {username, password} = req.query
+    if(method === 'POST' && req.path === '/api/user/login'){
+        const {username, password} = req.body
+        // const {username, password} = req.query
         return loginCheck(username,password).then(result => {
             if(result.username){
                 // 设置 session
                 req.session.username = result.username
                 req.session.realname = result.realname
+
+                setRedis(req.sessionId, req.session)
 
                 return new SuccessModel(result, '登录成功')
             }else {

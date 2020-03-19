@@ -2,6 +2,7 @@ const querystring = require('querystring')
 
 const handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
+const {setRedis,getRedis} = require('./src/db/redis')
 
 // 设置 cookie 过期时间
 const setCookieExpires = () => {
@@ -12,7 +13,7 @@ const setCookieExpires = () => {
 
 
 // session
-let SESSION_DATA = {}
+// let SESSION_DATA = {}
 
 const getPostData = (req) => {
     return new Promise((resolve, reject) => {
@@ -67,16 +68,20 @@ const serverHandle = async (req, res) => {
     // 解析 session
     let needSetCookie = false
     let userId = req.cookie.userid
-    if (userId) {
-        if (!SESSION_DATA[userId]) {
-            SESSION_DATA[userId] = {}
-        }
-    } else {
+    if (!userId) {
         needSetCookie = true
         userId = `${Date.now()}_${Math.random()}`
-        SESSION_DATA[userId] = {}
+        setRedis(userId, {})
     }
-    req.session = SESSION_DATA[userId]
+
+    req.sessionId = userId
+    let sessionData = await getRedis(req.sessionId)
+    if(sessionData === null) {
+        setRedis(req.sessionId, {})
+        req.session = {}
+    } else {
+        req.session = sessionData
+    }
 
 
     // 处理 blog 路由
