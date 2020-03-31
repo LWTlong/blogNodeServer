@@ -28,9 +28,7 @@ const handleUserRouter = (req, res) => {
     if (method === 'GET' && req.path === '/api/user/login-test') {
         if (req.session.username) {
             return Promise.resolve(
-                new SuccessModel({
-                    username: req.session
-                }, '已登录')
+                new SuccessModel(req.session, '已登录')
             )
         }
         return Promise.resolve(

@@ -41,7 +41,7 @@ const handleBlogRouter = async (req, res) => {
         if(loginCheckResult){
             return  loginCheckResult
         }
-        const author = req.session.username
+        const author = req.session.realname
         req.body.author = author
         return newBlog(req.body).then(res => {
             return new SuccessModel(res)
@@ -77,7 +77,8 @@ const handleBlogRouter = async (req, res) => {
             return  loginCheckResult
         }
 
-        const author = req.session.username
+        const author = req.session.realname
+        console.log(id)
         return delBlog(id, author).then(res => {
             if (res) {
                 return new SuccessModel(res, '删除成功')

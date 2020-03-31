@@ -1,13 +1,16 @@
-const {exec} = require('../db/mysql')
+const {exec, escape} = require('../db/mysql')
+const xss = require('xss')
 
 const getList = (author, keyword) => {
     // 1=1 为了 衔接 where
     let sql = 'select * from blogs where 1=1 '
     if (author) {
-        sql += `and author='${author}' `
+        author = escape(author)
+        sql += `and author=${author} `
     }
     if (keyword) {
-        sql += `and title like '%${keyword}%' `
+        keyword = escape('%' + keyword + '%')
+        sql += `and title like ${keyword} `
     }
     sql += `order by createTime desc;`
     return exec(sql)
@@ -22,9 +25,13 @@ const getDetail = (id) => {
 
 const newBlog = (blogData = {}) => {
     // blogData { title, content, author}
-    const {title, content, author} = blogData
+    let {title, content, author} = blogData
+    // title = xss(title) // 前端需要转移标签的 </> 这里先注释掉
+    title = escape(title)
+    content = escape(content)
+    author = escape(author)
     const createTime = Date.now()
-    const sql = `insert into blogs (title, content, author, createTime) values ('${title}', '${content}', '${author}', ${createTime})`
+    const sql = `insert into blogs (title, content, author, createTime) values (${title}, ${content}, ${author}, ${createTime})`
     return exec(sql).then(insertData => {
         // console.log(insertData)
         // insertData{
@@ -45,8 +52,10 @@ const newBlog = (blogData = {}) => {
 
 const updateBlog = (id, blogData = {}) => {
     // id 更新博客的id  blogData = {title, content}
-    const {title, content} = blogData
-    const sql = `update blogs set title='${title}', content='${content}' where id='${id}'`
+    let {title, content} = blogData
+    title = escape(title)
+    content = escape(content)
+    const sql = `update blogs set title=${title}, content=${content} where id='${id}'`
     return exec(sql).then(updateData => {
         // console.log(updateData)
         // updateData{

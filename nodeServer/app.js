@@ -3,6 +3,7 @@ const querystring = require('querystring')
 const handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
 const {setRedis,getRedis} = require('./src/db/redis')
+const { access } = require('./src/util/log')
 
 // 设置 cookie 过期时间
 const setCookieExpires = () => {
@@ -52,6 +53,11 @@ const serverHandle = async (req, res) => {
     req.query = querystring.parse(url.split('?')[1])
     // 解析 postData
     req.body = await getPostData(req)
+    // 写日志
+    access(`
+    ${req.method} -- ${path}
+    `)
+
     // 解析 cookie
     req.cookie = {}
     const cookieStr = req.headers.cookie || ''
