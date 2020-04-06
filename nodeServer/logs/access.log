@@ -209,3 +209,21 @@
     
     GET -- /api/blog/list
     
+    GET -- /api/blog/list
+    
+    GET -- /api/blog/detail
+    
+    GET -- /api/user/login-test
+    
+    POST -- /api/user/login
+    
+    GET -- /api/blog/list
+    
+    GET -- /api/blog/list
+    
+    POST -- /api/user/login
+    
+    GET -- /api/blog/list
+    
+    POST -- /api/user/login
+    

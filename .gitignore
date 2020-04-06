@@ -3,6 +3,8 @@
 /nodeServer/node_modules/
 /nodeServer/.idea
 nodeServer/node_modules
+expressServer/node_modules
+expressServer/node_modules/
 nodeServer/node_modules/
 nodeServer/.idea
 
