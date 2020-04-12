@@ -44,6 +44,7 @@ const newBlog = (blogData = {}) => {
         //   protocol41: true,
         //   changedRows: 0
         // }
+        console.log(insertData)
         return {
             id: insertData.insertId
         }
