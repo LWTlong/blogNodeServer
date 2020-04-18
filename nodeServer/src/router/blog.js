@@ -78,7 +78,6 @@ const handleBlogRouter = async (req, res) => {
         }
 
         const author = req.session.realname
-        console.log(id)
         return delBlog(id, author).then(res => {
             if (res) {
                 return new SuccessModel(res, '删除成功')
